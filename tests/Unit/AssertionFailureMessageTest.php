@@ -63,4 +63,64 @@ class AssertionFailureMessageTest extends \PHPUnit\Framework\TestCase
             ],
         ];
     }
+
+    /**
+     * @dataProvider jsonSerializeDataProvider
+     */
+    public function testJsonSerialize(AssertionFailureMessage $assertionFailureMessage, array $expectedData)
+    {
+        $this->assertSame($expectedData, $assertionFailureMessage->jsonSerialize());
+    }
+
+    public function jsonSerializeDataProvider(): array
+    {
+        $existsAssertion = new Assertion(
+            '$".selector" exists',
+            '$".selector"',
+            'exists'
+        );
+
+        $comparisonAssertion = new ComparisonAssertion(
+            '$".selector" is "value"',
+            '$".selector"',
+            'is',
+            '"value"'
+        );
+
+        $interactionAction = new InteractionAction(
+            'click $".selector"',
+            'click',
+            '$".selector"',
+            '$".selector"'
+        );
+
+        return [
+            'no derivation source' => [
+                'assertionFailureMessage' => new AssertionFailureMessage($existsAssertion),
+                'expectedData' => [
+                    'assertion' => $existsAssertion,
+                ],
+            ],
+            'assertion derivation source' => [
+                'assertionFailureMessage' => new AssertionFailureMessage($existsAssertion, $comparisonAssertion),
+                'expectedData' => [
+                    'assertion' => $existsAssertion,
+                    'derived_from' => [
+                        'statement_type' => 'assertion',
+                        'statement' => $comparisonAssertion,
+                    ],
+                ],
+            ],
+            'action derivation source' => [
+                'assertionFailureMessage' => new AssertionFailureMessage($existsAssertion, $interactionAction),
+                'expectedData' => [
+                    'assertion' => $existsAssertion,
+                    'derived_from' => [
+                        'statement_type' => 'action',
+                        'statement' => $interactionAction,
+                    ],
+                ],
+            ],
+        ];
+    }
 }
