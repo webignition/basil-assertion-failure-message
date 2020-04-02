@@ -30,6 +30,9 @@ class AssertionFailureMessage implements JsonSerializable
         return $this->derivationSource;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function jsonSerialize(): array
     {
         $data = [

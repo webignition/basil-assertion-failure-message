@@ -66,6 +66,9 @@ class AssertionFailureMessageTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider jsonSerializeDataProvider
+     *
+     * @param AssertionFailureMessage $assertionFailureMessage
+     * @param array<mixed> $expectedData
      */
     public function testJsonSerialize(AssertionFailureMessage $assertionFailureMessage, array $expectedData)
     {
