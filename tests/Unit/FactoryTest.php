@@ -15,6 +15,9 @@ use webignition\BasilModels\Assertion\Factory\UnknownComparisonException;
 
 class FactoryTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Factory
+     */
     private $factory;
 
     protected function setUp(): void
@@ -27,10 +30,12 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider fromJsonSuccessDataProvider
      */
-    public function testFromJsonSuccess(
-        AssertionFailureMessage $assertionFailureMessage
-    ) {
-        $this->assertEquals($assertionFailureMessage, $this->factory->fromJson(json_encode($assertionFailureMessage)));
+    public function testFromJsonSuccess(AssertionFailureMessage $assertionFailureMessage)
+    {
+        $this->assertEquals(
+            $assertionFailureMessage,
+            $this->factory->fromJson((string) json_encode($assertionFailureMessage))
+        );
     }
 
     public function fromJsonSuccessDataProvider(): array
@@ -114,7 +119,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
                     'assertion' => $invalidComparisonAssertionData,
                 ]),
                 'expectedException' => FailureMessageException::createMalformedAssertionException(
-                    json_encode([
+                    (string) json_encode([
                         'assertion' => $invalidComparisonAssertionData,
                     ]),
                     new UnknownComparisonException(
@@ -129,7 +134,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
                     'derived_from' => [],
                 ]),
                 'expectedException' => FailureMessageException::createDerivationSourceTypeMissingException(
-                    json_encode([
+                    (string) json_encode([
                         'assertion' => $existsAssertionData,
                         'derived_from' => [],
                     ])
@@ -143,7 +148,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
                     ],
                 ]),
                 'expectedException' => FailureMessageException::createDerivationSourceTypeInvalidException(
-                    json_encode([
+                    (string) json_encode([
                         'assertion' => $existsAssertionData,
                         'derived_from' => [
                             'statement_type' => 'foo'
@@ -160,7 +165,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
                     ],
                 ]),
                 'expectedException' => FailureMessageException::createMalformedAssertionException(
-                    json_encode([
+                    (string) json_encode([
                         'assertion' => $existsAssertionData,
                         'derived_from' => [
                             'statement_type' => 'assertion',
@@ -182,7 +187,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
                     ],
                 ]),
                 'expectedException' => FailureMessageException::createMalformedActionException(
-                    json_encode([
+                    (string) json_encode([
                         'assertion' => $existsAssertionData,
                         'derived_from' => [
                             'statement_type' => 'action',
